@@ -1,0 +1,28 @@
+﻿@model MilestoneMotorsWeb.ViewModels.EditUserViewModel
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<form method="post" enctype="multipart/form-data" style="padding: 100px 0;">
+    @Html.AntiForgeryToken()
+    <section class="card" style="padding: 50px 30px;">
+        <div class="form-group">
+            <label asp-for="ProfilePictureImageUrl"></label>
+            <input asp-for="ProfilePictureImageUrl" type="file" class="form-control">
+        </div>
+        <div class="form-group">
+            <label asp-for="Country"></label>
+            <input class="form-control" asp-for="Country" placeholder="optional" />
+        </div>
+        <div class="form-group">
+            <label asp-for="City"></label>
+            <input class="form-control" asp-for="City" placeholder="optional" />
+        </div>
+        <div class="form-group">
+            <label asp-for="State"></label>
+            <input class="form-control" asp-for="State" placeholder="optional" />
+        </div>
+        <button class="btn btn-primary" style="font-size: 16px;">Save changes</button>
+    </section>
+</form>
+

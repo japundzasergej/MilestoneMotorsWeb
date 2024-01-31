@@ -1,0 +1,140 @@
+﻿@model User
+@{
+    ViewData["Title"] = Model.UserName;
+}
+
+@{
+    static string CheckAccountCredentials(string info)
+    {
+        if(string.IsNullOrWhiteSpace(info))
+        {
+            return "Not yet defined.";
+        }
+        return info;
+    }
+}
+
+<section class="profile-page">
+    <div class="row">
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-body text-center">
+                    <div>
+                        @{
+                            if(string.IsNullOrWhiteSpace(Model.ProfilePictureImageUrl)) {
+                                <img src="/assets/defaultBig.png" alt="avatar"
+                                     class="rounded-circle img-fluid" style="width: 150px;"/>
+                            } else {
+                                <img src="@Model.ProfilePictureImageUrl" alt="avatar"
+                                     class="rounded-circle img-fluid" style="width: 150px;" />
+                            }
+                        }
+                    </div>
+                        <h5 class="my-3">@Model.UserName</h5>
+                        <div class="d-flex justify-content-center mb-2">
+                        <a asp-controller="User" asp-action="EditPage" asp-route-id="@Model.Id" class="btn btn-primary" style="z-index: 1;">Edit Profile</a>
+                        <a asp-controller="User" asp-action="MyListings" class="btn btn-outline-primary ms-1" style="z-index: 1;">My Listings</a>
+
+
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Username</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">@Model.UserName</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Email</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">@Model.Email</p>
+                            </div>
+                        </div>
+                        <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Country</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">@CheckAccountCredentials(Model.Country)</p>
+                        </div>
+                    </div>
+                    <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">City</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">@CheckAccountCredentials(Model.City)</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">State</p>
+                            </div>
+                            <div class="col-sm-9">
+                            <p class="text-muted mb-0">@CheckAccountCredentials(Model.State)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <div class="text-center">
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteUserModal">
+                    Delete
+                </button>
+                <div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="deleteUserModalTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Confirm deletion</h5>
+                                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to delete user:
+                                @{
+                                    @string.Concat("userId: ", Model.Id, ", Username: ", Model.UserName)
+
+                                }
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                <button onclick="deleteUser()" class="btn btn-danger">Confirm deletion</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    const deleteUser = () => {
+        const csrfToken = $('input[name="__RequestVerificationToken"]').val();
+
+        $.ajax({
+            url: '/User/DeleteUser/',
+            type: 'POST',
+            headers: {
+                'RequestVerificationToken': csrfToken
+            },
+            success: () => {
+                window.location.href="/Home/Index"
+            }
+        });
+    }
+</script>
+

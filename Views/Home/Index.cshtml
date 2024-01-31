@@ -1,0 +1,228 @@
+﻿@using MilestoneMotorsWeb.Utilities
+@using Microsoft.AspNetCore.Identity
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using System.Web
+@using MilestoneMotorsWeb.Data.Enums
+@inject SignInManager<User> SignInManager
+@model X.PagedList.IPagedList<Car>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<article class="index-page">
+    <partial name="_SuccessNotification" />
+    <section class="jumbotron text-center">
+        <div class="container">
+            <h4 class="display-4">Quality Drives, Better Prices</h4>
+            <p class="lead text-muted">
+                Explore our curated collection of quality used cars. Each vehicle is carefully inspected for reliability. Trust us to connect you with reputable sellers for a worry-free buying experience.
+            </p>
+            <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-center">
+                @if (!SignInManager.IsSignedIn(User))
+                {
+                    <p class="lead mb-3" style="font-weight: 500">Please register to create listings.</p>
+                }
+                else
+                {
+                    <p class="lead mb-3" style="font-weight: 500"><a asp-controller="User" asp-action="MyListings">Create a new listing</a></p>
+                }
+            </div>
+            <p class="mb-3">
+                <form class="d-flex" method="get" asp-action="Index" asp-controller="Home">
+                    <input class="form-control me-sm-2" style="margin-right: 5px;" name="search" type="search" placeholder="Search" value="@ViewBag.Search">
+                    <button class="btn btn-primary my-2" type="submit" style="font-size: 16px;">Search</button>
+                </form>
+            </p>
+
+            <div class="text-start mb-3">
+                <button class="btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#collapseFilters" aria-expanded="false" aria-controls="collapseFilters">
+                    <span><i class="bi bi-ui-radios"></i>&nbsp;Filters</span>
+                </button>
+            </div>
+            <div class="collapse mb-4" id="collapseFilters">
+                <div class="card card-body">
+                    <div class="row mb-2">
+                        <div class="col filter-col">
+                            <button class="filter-buttons btn btn-outline-secondary" style="margin-right: 5px;">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fas fa-car"></i>&nbsp;Fuel Type</a>
+                                <div class="dropdown-menu overflow-auto" style="max-height: 200px;">
+                                    <div class="d-flex flex-column text-center">
+                                        @foreach (var c in Enum.GetValues(typeof(FuelTypes)))
+                                        {
+                                            <a class="filter-link" href="@Url.Action("Index", new { fuelTypeFilter = c, search = ViewBag.Search, orderBy = ViewBag.OrderBy, brandFilter = ViewBag.BrandFilter, bodyTypeFilter = ViewBag.BodyTypeFilter, page = ViewBag.Page })">
+                                                @c.ToString()
+                                            </a>
+                                            <hr />
+                                        }
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="col filter-col">
+                            <button class="filter-buttons btn btn-outline-secondary" style="margin-right: 5px;">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="bi bi-building"></i>&nbsp;Car Brand</a>
+                                <div class="dropdown-menu overflow-auto" style="max-height: 200px;">
+                                    <div class="d-flex flex-column text-center">
+                                        @foreach (var c in Enum.GetValues(typeof(Brand)))
+                                        {
+                                            <a class="filter-link" href="@Url.Action("Index", new { brandFilter = c, search = ViewBag.Search, orderBy = ViewBag.OrderBy, fuelTypeFilter = ViewBag.FuelTypeFilter, bodyTypeFilter = ViewBag.BodyTypeFilter, page = ViewBag.Page })">
+                                                @c.ToString()
+                                            </a>
+                                            <hr />
+                                        }
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="col filter-col">
+                            <button class="filter-buttons btn btn-outline-secondary" style="margin-right: 5px;">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="bi bi-check"></i>&nbsp;Car Condition</a>
+                                <div class="dropdown-menu">
+                                    <div class="d-flex flex-column text-center">
+                                        @foreach(var c in Enum.GetValues<Condition>())
+                                        {
+                                            <a class="filter-link" href="@Url.Action("Index", new { conditionFilter = c, search = ViewBag.Search, orderBy = ViewBag.OrderBy, fuelTypeFilter = ViewBag.FuelTypeFilter, bodyTypeFilter = ViewBag.BodyTypeFilter, brandFilter = ViewBag.BrandFilter, page = ViewBag.Page })">@c.ToString()</a>
+                                            <hr>
+                                        }
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col filter-col">
+                            <a class="filter-buttons btn btn-outline-secondary" style="margin-right: 5px;" href="@Url.Action("Index", new { orderBy = "priceDesc", search = ViewBag.Search, fuelTypeFilter = ViewBag.FuelTypeFilter, bodyTypeFilter = ViewBag.BodyTypeFilter, brandFilter = ViewBag.BrandFilter, page = ViewBag.Page })"><i class="fas fa-sort-amount-down"></i>&nbsp;By Price</a>
+                        </div>
+                        <div class="col filter-col">
+                            <a class="filter-buttons btn btn-outline-secondary" style="margin-right: 5px;" href="@Url.Action("Index", new { orderBy = "priceAsc", search = ViewBag.Search, fuelTypeFilter = ViewBag.FuelTypeFilter, bodyTypeFilter = ViewBag.BodyTypeFilter, brandFilter = ViewBag.BrandFilter, page = ViewBag.Page })">
+                                <i class="fas fa-sort-amount-up"></i>&nbsp;By Price
+                            </a>
+                        </div>
+                        <div class="col filter-col">
+                            <a class="filter-buttons btn btn-outline-secondary" style="margin-right: 5px;" href="@Url.Action("Index", new { orderBy = "yearDesc", search = ViewBag.Search, fuelTypeFilter = ViewBag.FuelTypeFilter, bodyTypeFilter = ViewBag.BodyTypeFilter, brandFilter = ViewBag.BrandFilter, page = ViewBag.Page })">
+                                <i class="fas fa-sort-amount-down"></i>&nbsp;By Year
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section>
+        <div class="album py-5 bg-light">
+            <div class="container">
+
+                @if (Model.Count > 0)
+                {
+                    <div class="row responsive-card-columns">
+                        @foreach (var car in Model)
+                        {
+                            <div class="col-md-4 col-sm-6">
+                                <div class="card mb-4 box-shadow">
+                                    <a asp-controller="Home" asp-action="Detail" asp-route-id="@car.Id">
+                                        <img style="max-height: 154.5px; min-height: 154.5px;" class="card-img-top" src="@car.HeadlinerImageUrl" alt="@string.Concat(car.Brand, " ", car.Model, " ", car.ManufacturingYear)" />
+                                    </a>
+                                    <div class="card-body" style="min-height: 250.516px; max-height: 250.516px;">
+                                        <p class="card-text">
+                                            @string.Concat(car.Brand, " ", car.Model, " ", car.ManufacturingYear)
+                                        </p>
+                                        <p class="card-text" style="margin-bottom: 4px;">
+                                            <strong>
+                                                @car.Price
+                                            </strong>
+                                        </p>
+                                        <p class="card-text" style="min-height: 52.8px; max-height: 52.8px;">
+                                            @{
+                                                var description = car.Description;
+                                                string charsAllowed;
+                                                if (car.Description.Length <= 35)
+                                                {
+                                                    charsAllowed = description;
+                                                }
+                                                else
+                                                {
+                                                    charsAllowed = description.Substring(0, 35) + " ...";
+                                                }
+
+                                                @charsAllowed
+                                            }
+                                        </p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="btn-group" style="margin-bottom: 10px;">
+                                                <a class="btn btn-md btn-outline-secondary" asp-controller="Home" asp-action="Detail" asp-route-id="@car.Id">View</a>
+                                                @if ((User?.Identity?.IsAuthenticated == true && User.IsInRole("admin")) || (User?.Identity?.IsAuthenticated == true && User?.GetUserId() == car.UserId))
+                                                {
+                                                    <a asp-controller="Home" asp-action="Edit" asp-route-id="@car.Id" type="button" class="btn btn-md btn-outline-primary">Edit</a>
+                                                }
+                                                @if ((User?.Identity?.IsAuthenticated == true && User.IsInRole("admin")) || (User?.Identity?.IsAuthenticated == true && User?.GetUserId() == car.UserId))
+                                                {
+
+                                                    <button type="button" class="btn btn-md btn-outline-danger" data-toggle="modal" data-target="#deleteCarModal">
+                                                        Delete
+                                                    </button>
+                                                    <div class="modal fade" id="deleteCarModal" tabindex="-1" role="dialog" aria-labelledby="deleteCarModalTitle" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="exampleModalLongTitle">Confirm deletion</h5>
+                                                                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    Are you sure you want to delete listing
+                                                                    @{
+                                                                        @string.Concat(car.Brand, " ", car.Model, " ", car.ManufacturingYear)
+                                                                        ;
+                                                                    }
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                                                    <button onclick="deleteCar(@car.Id)" class="btn btn-danger">Confirm deletion</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+
+                                            </div>
+                                        </div>
+                                        <div class="text-start">
+                                            <small class="text-muted text-nowrap" style="font-size: 12px; margin-left: 5px;">
+                                                @{
+                                                    var serverTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+                                                    var localTime = TimeZoneInfo.ConvertTimeFromUtc(car.CreatedAt, serverTimeZone);
+                                                    @FormatDate.TimeAgo(localTime, serverTimeZone)
+                                                }
+
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, search = ViewBag.Search }))
+                }
+                else
+                {
+                    <p class="display-4" style="padding: 50px;">Nothing found...</p>
+                }
+
+            </div>
+        </div>
+    </section>
+</article>
+
+<script>
+    const deleteCar = (carId) => {
+        $.ajax({
+            url: '/Home/Delete/' + carId,
+            type: 'POST',
+            success: () => location.reload(),
+            error: () => alert("error deleting object")
+        });
+    }
+</script>
