@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MilestoneMotorsWeb.Data.Enums;
@@ -66,12 +67,15 @@ namespace MilestoneMotorsWeb.Controllers
 
         private static int ConvertPrice(string price)
         {
-            string[] parts = price.Split(' ');
+            char[] invalidChars =  [ '.', ' ', '€' ];
 
-            if (int.TryParse(parts[0], out int numericPart))
+            string numericString = new(price.Where(c => !invalidChars.Contains(c)).ToArray());
+
+            if (int.TryParse(numericString, out int numericPart))
             {
                 return numericPart;
             }
+
             return 0;
         }
 
