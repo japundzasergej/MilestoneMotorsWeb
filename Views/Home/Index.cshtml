@@ -35,10 +35,14 @@
                 </form>
             </p>
 
-            <div class="text-start mb-3">
+            <div class="d-flex justify-content-between mb-3">
                 <button class="btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#collapseFilters" aria-expanded="false" aria-controls="collapseFilters">
                     <span><i class="bi bi-ui-radios"></i>&nbsp;Filters</span>
                 </button>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-danger">
+                    <i class="fas fa-times"></i>
+                    &nbsp;Clear filters
+                </a>
             </div>
             <div class="collapse mb-4" id="collapseFilters">
                 <div class="card card-body">
