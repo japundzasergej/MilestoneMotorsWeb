@@ -60,7 +60,7 @@ namespace MilestoneMotorsWeb.Data
                         HeadlinerImageUrl = headlinerImageUrl,
                         ImagesUrl = imagesUrl,
                         CreatedAt = createdAt,
-                        AdNumber = uniqueUserIds[i] + "-" + model
+                        AdNumber = GetAdNumber(uniqueUserIds[i], model)
                     }
                 );
             }
@@ -123,6 +123,13 @@ namespace MilestoneMotorsWeb.Data
                 "built for comfort and style!"
             };
             return $"{firstParts[index]} {condition.ToLower()} {brand} {model} {secondParts[index]}";
+        }
+
+        private static string GetAdNumber(string uniqueUserId, string model)
+        {
+            var userIds = uniqueUserId.Split("-");
+            var randomId = random.Next(1545, 3578);
+            return $"{userIds[0]}-{model}-{randomId}-{userIds[1]}";
         }
 
         private static Condition GetRandomCondition()
@@ -256,7 +263,7 @@ namespace MilestoneMotorsWeb.Data
                 var isExpensive = IsExpensiveBrand(brand);
 
                 return isExpensive
-                    ? ConvertToEuroMethod.ConvertToEuro(estimatedPrice - random.Next(2500, 5000))
+                    ? ConvertToEuroMethod.ConvertToEuro(estimatedPrice + random.Next(2500, 5000))
                     : ConvertToEuroMethod.ConvertToEuro(estimatedPrice - random.Next(1500, 2500));
             }
         }
