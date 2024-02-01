@@ -67,11 +67,12 @@ namespace MilestoneMotorsWeb.Controllers
 
         private static int ConvertPrice(string price)
         {
-            char[] invalidChars =  [ '.', ' ', '€' ];
+            char[] invalidChars =  [ ' ', '.', '€' ];
 
-            string numericString = new(price.Where(c => !invalidChars.Contains(c)).ToArray());
+            string cleanedString =
+                new(price.Trim().Where(c => !invalidChars.Contains(c)).ToArray());
 
-            if (int.TryParse(numericString, out int numericPart))
+            if (int.TryParse(cleanedString, out int numericPart))
             {
                 return numericPart;
             }
@@ -83,9 +84,9 @@ namespace MilestoneMotorsWeb.Controllers
         {
             return order switch
             {
-                "priceDesc" => [ ..source.OrderByDescending(c => ConvertPrice(c.Price)) ],
-                "priceAsc" => [ .. source.OrderBy(c => ConvertPrice(c.Price)) ],
-                "yearDesc" => [ .. source.OrderByDescending(c => c.ManufacturingYear) ],
+                "priceDesc" => source.OrderByDescending(c => ConvertPrice(c.Price)).ToList(),
+                "priceAsc" => source.OrderBy(c => ConvertPrice(c.Price)).ToList(),
+                "yearDesc" => source.OrderByDescending(c => c.ManufacturingYear).ToList(),
                 _ => source,
             };
         }

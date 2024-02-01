@@ -211,7 +211,15 @@
                         }
                     </div>
                    <div class="pagination-container">
-                        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, search = ViewBag.Search }))
+                        @Html.PagedListPager(Model, page => Url.Action("Index", new
+                            {
+                                page,
+                                search = ViewBag.Search,
+                                orderBy = ViewBag.OrderBy,
+                                fuelTypeFilter = ViewBag.FuelTypeFilter,
+                                conditionFilter = ViewBag.BodyTypeFilter,
+                                brandFilter = ViewBag.BrandFilter
+                            }))
                    </div>
                 }
                 else
