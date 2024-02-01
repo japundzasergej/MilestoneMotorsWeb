@@ -170,9 +170,9 @@ namespace MilestoneMotorsWeb.Data
             };
         }
 
-        private static string GetRandomPrice(Brand brand, Condition condition)
+        private static bool IsExpensiveBrand(Brand brand)
         {
-            bool expensive = brand switch
+            return brand switch
             {
                 Brand.Audi
                 or Brand.Chevrolet
@@ -185,33 +185,80 @@ namespace MilestoneMotorsWeb.Data
                     => true,
                 _ => false
             };
+        }
 
-            double price;
+        private static double GetEstimatedNewPrice(Brand brand)
+        {
+            return brand switch
+            {
+                Brand.Audi => 60000,
+                Brand.Volkswagen => 25000,
+                Brand.Ford => 35000,
+                Brand.Chevrolet => 30000,
+                Brand.Honda => 28000,
+                Brand.Nissan => 26000,
+                Brand.BMW => 70000,
+                Brand.Mercedes => 65000,
+                Brand.Hyundai => 23000,
+                Brand.Kia => 22000,
+                Brand.Subaru => 27000,
+                Brand.Tesla => 75000,
+                Brand.Porsche => 90000,
+                Brand.Jaguar => 80000,
+                Brand.Mazda => 32000,
+                Brand.Volvo => 40000,
+                Brand.Fiat => 18000,
+                Brand.Jeep => 35000,
+                _ => (double)28000,
+            };
+        }
 
+        private static double GetEstimatedUsedPrice(Brand brand)
+        {
+            return brand switch
+            {
+                Brand.Audi => 45000,
+                Brand.Volkswagen => 15000,
+                Brand.Ford => 20000,
+                Brand.Chevrolet => 18000,
+                Brand.Honda => 16000,
+                Brand.Nissan => 14000,
+                Brand.BMW => 45000,
+                Brand.Mercedes => 42000,
+                Brand.Hyundai => 15000,
+                Brand.Kia => 14000,
+                Brand.Subaru => 18000,
+                Brand.Tesla => 60000,
+                Brand.Porsche => 70000,
+                Brand.Jaguar => 60000,
+                Brand.Mazda => 22000,
+                Brand.Volvo => 28000,
+                Brand.Fiat => 10000,
+                Brand.Jeep => 20000,
+                _ => (double)17500
+            };
+        }
+
+        private static string GetRandomPrice(Brand brand, Condition condition)
+        {
             if (condition == Condition.New)
             {
-                if (expensive)
-                {
-                    price = random.Next(100000, 150000);
-                }
-                else
-                {
-                    price = random.Next(45000, 80000);
-                }
+                double estimatedPrice = GetEstimatedNewPrice(brand);
+                var isExpensive = IsExpensiveBrand(brand);
+
+                return isExpensive
+                    ? ConvertToEuroMethod.ConvertToEuro(estimatedPrice + random.Next(5000, 10000))
+                    : ConvertToEuroMethod.ConvertToEuro(estimatedPrice + random.Next(2500, 3500));
             }
             else
             {
-                if (expensive)
-                {
-                    price = random.Next(50000, 70000);
-                }
-                else
-                {
-                    price = random.Next(15000, 35000);
-                }
-            }
+                double estimatedPrice = GetEstimatedUsedPrice(brand);
+                var isExpensive = IsExpensiveBrand(brand);
 
-            return ConvertToEuroMethod.ConvertToEuro(price);
+                return isExpensive
+                    ? ConvertToEuroMethod.ConvertToEuro(estimatedPrice - random.Next(2500, 5000))
+                    : ConvertToEuroMethod.ConvertToEuro(estimatedPrice - random.Next(1500, 2500));
+            }
         }
 
         private static int GetPlausibleManufacturingYear(Condition condition)

@@ -25,7 +25,7 @@ overflow-x: hidden;
 }
 .logo-wrapper {
 position: relative;
-width: 135px;
+width: 170px;
 padding-bottom: 25px; 
 }
 
@@ -399,6 +399,12 @@ margin-right: 5px;
 .pagination-container {
 max-width: 350px;
 overflow-x: auto;
+}
+@media(min-width: 768px) {
+.pagination-container {
+max-width: 100%;
+overflow-x: hidden;
+}
 }
 .pagination {
 display: flex;
