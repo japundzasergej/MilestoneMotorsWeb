@@ -35,11 +35,6 @@ namespace MilestoneMotorsWeb.Controllers
             return result;
         }
 
-        private static string ConvertToEuro(double input)
-        {
-            return string.Format(new CultureInfo("de-De"), "{0:N0} €", input);
-        }
-
         private static EditCarViewModel EditVmMapper(Car source)
         {
             var capacity = source.EngineCapacity.Split(" ");
@@ -212,7 +207,7 @@ namespace MilestoneMotorsWeb.Controllers
                     Condition = carVM.Condition,
                     Brand = carVM.Brand,
                     Description = carVM.Description.FirstCharToUpper().Trim(),
-                    Price = ConvertToEuro(carVM.Price),
+                    Price = ConvertToEuroMethod.ConvertToEuro(carVM.Price),
                     Model = carVM.Model.FirstCharToUpper().Trim(),
                     ManufacturingYear = carVM.ManufacturingYear,
                     Mileage = carVM.Mileage.ToString() + " (km)",
@@ -272,7 +267,7 @@ namespace MilestoneMotorsWeb.Controllers
                         Brand = carViewModel.Brand,
                         Description = carViewModel.Description.FirstCharToUpper().Trim(),
                         Model = carViewModel.Model.FirstCharToUpper().Trim(),
-                        Price = ConvertToEuro(carViewModel.Price),
+                        Price = ConvertToEuroMethod.ConvertToEuro(carViewModel.Price),
                         ManufacturingYear = carViewModel.ManufacturingYear,
                         Mileage = carViewModel.Mileage + " (km)",
                         BodyTypes = carViewModel.BodyTypes,

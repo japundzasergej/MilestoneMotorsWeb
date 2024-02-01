@@ -38,6 +38,7 @@ var app = builder.Build();
 
 if (args.Length == 1 && args[0].Equals("seeddata", StringComparison.CurrentCultureIgnoreCase))
 {
+    //Seed.SeedData(app);
     //await Seed.SeedUsersAndRolesAsync(app);
 }
 

@@ -139,13 +139,13 @@
                                             @{
                                                 var description = car.Description;
                                                 string charsAllowed;
-                                                if (car.Description.Length <= 35)
+                                                if (car.Description.Length <= 70)
                                                 {
                                                     charsAllowed = description;
                                                 }
                                                 else
                                                 {
-                                                    charsAllowed = description.Substring(0, 35) + " ...";
+                                                    charsAllowed = description.Substring(0, 71) + " ...";
                                                 }
 
                                                 @charsAllowed
@@ -204,7 +204,9 @@
                             </div>
                         }
                     </div>
-                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, search = ViewBag.Search }))
+                   <div class="pagination-container">
+                        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, search = ViewBag.Search }))
+                   </div>
                 }
                 else
                 {

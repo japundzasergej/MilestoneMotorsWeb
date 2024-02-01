@@ -288,12 +288,13 @@ transform: translateY(-50%);
 cursor: pointer;
 }
 .errorValidation {
-font-size: 15px;
-color: red;
-}
-.errorValidationPassword {
 font-size: 12px;
 color: red;
+}
+@media(min-width: 768px) {
+.errorValidation {
+font-size: 15px;
+}
 }
 .bd-placeholder-img {
 font-size: 1.125rem;
@@ -327,7 +328,7 @@ border-radius: 50%;
 object-fit: cover;
 }
 .my-listing {
-    padding: 70px;
+    padding: 70px 20px;
 }
 @media(min-width:768px) {
 .my-listing {
@@ -394,6 +395,10 @@ background-color: #0056b3;
 
 .create-listing-btn-first i {
 margin-right: 5px;
+}
+.pagination-container {
+max-width: 350px;
+overflow-x: auto;
 }
 .pagination {
 display: flex;
