@@ -135,6 +135,8 @@ namespace MilestoneMotorsWeb.Controllers
             ViewBag.FuelTypeFilter = fuelTypeFilter;
             ViewBag.BodyTypeFilter = conditionFilter;
             ViewBag.BrandFilter = brandFilter;
+            ViewBag.Page = page;
+
             var carsList = await _carsRepository.GetAllCarsAsync();
 
             var searchedList = carsList
