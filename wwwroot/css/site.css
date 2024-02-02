@@ -386,7 +386,7 @@ box-sizing: border-box;
 }
 @media(min-width: 568px) {
 .create-listing-btn-first {
-min-height: calc(154.5px + 250px);
+min-height: calc(214.55px + 250px);
 }
 }
 .create-listing-btn-first:hover {

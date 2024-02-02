@@ -134,8 +134,8 @@
                             <div class="col-md-4 col-sm-6">
                                 <div class="card mb-4 box-shadow">
                                     <a asp-controller="Home" asp-action="Detail" asp-route-id="@car.Id">
-                                        <div style="max-height: 214.5px; min-height 214.5px; overflow: hidden;">
-                                            <img style="width: 100%; height: 100%; object-fit: cover; object-postion: top;" class="card-img-top" src="@car.HeadlinerImageUrl" alt="@string.Concat(car.Brand, " ", car.Model, " ", car.ManufacturingYear)" />
+                                        <div style="max-height: 214.5px; min-height: 214.5px; overflow: hidden;">
+                                            <img style="width: 100%; height: 100%; object-fit: cover;" class="card-img-top" src="@car.HeadlinerImageUrl" alt="@string.Concat(car.Brand, " ", car.Model, " ", car.ManufacturingYear)" />
                                         </div>
                                     </a>
                                     <div class="card-body" style="min-height: 250.516px; max-height: 250.516px;">
@@ -173,22 +173,24 @@
                                                 @if ((User?.Identity?.IsAuthenticated == true && User.IsInRole("admin")) || (User?.Identity?.IsAuthenticated == true && User?.GetUserId() == car.UserId))
                                                 {
 
-                                                    <button type="button" class="btn btn-md btn-outline-danger" data-toggle="modal" data-target="#deleteCarModal">
+                                                    <button type="button" class="btn btn-md btn-outline-danger" data-toggle="modal" data-target="#deleteCarModal_@car.Id">
                                                         Delete
                                                     </button>
-                                                    <div class="modal fade" id="deleteCarModal" tabindex="-1" role="dialog" aria-labelledby="deleteCarModalTitle" aria-hidden="true">
+
+
+                                                    <div class="modal fade" id="deleteCarModal_@car.Id" tabindex="-1" role="dialog" aria-labelledby="deleteCarModalTitle" aria-hidden="true">
                                                         <div class="modal-dialog modal-dialog-centered" role="document">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                    <h5 class="modal-title" id="exampleModalLongTitle">Confirm deletion</h5>
+                                                                    <h5 class="modal-title" id="deleteCarModalTitle">Confirm deletion</h5>
                                                                     <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                                                                 </div>
                                                                 <div class="modal-body">
-                                                                    Are you sure you want to delete listing
+                                                                    Are you sure you want to delete the listing
                                                                     @{
                                                                         @string.Concat(car.Brand, " ", car.Model, " ", car.ManufacturingYear)
-                                                                        ;
                                                                     }
+                                                                    ?
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -197,6 +199,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
+
                                                 }
 
                                             </div>
