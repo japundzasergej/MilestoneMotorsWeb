@@ -36,10 +36,10 @@
             </p>
 
             <div class="d-flex justify-content-between mb-3">
-                <button class="btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#collapseFilters" aria-expanded="false" aria-controls="collapseFilters">
+                <button class="btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#collapseFilters" aria-expanded="false" aria-controls="collapseFilters" id="filtersButton">
                     <span><i class="bi bi-ui-radios"></i>&nbsp;Filters</span>
                 </button>
-                <a href="@Url.Action("Index", new {
+                <a id="clearFiltersButton" href="@Url.Action("Index", new {
                     search = ViewBag.Search,
                     page = ViewBag.Page,
                     orderBy = (string)null,
@@ -238,13 +238,21 @@
     </section>
 </article>
 
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     const deleteCar = (carId) => {
         $.ajax({
             url: '/Home/Delete/' + carId,
             type: 'POST',
             success: () => location.reload(),
-            error: () => alert("error deleting object")
+            error: () => window.location.href = '/Home/Index'
         });
     }
+    $(document).ready(() => {
+        $("#clearFiltersButton").hide();
+
+        $("#filtersButton").click(() => {
+            $("#clearFiltersButton").toggle();
+        });
+    });
 </script>
