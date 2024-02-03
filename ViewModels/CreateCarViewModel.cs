@@ -57,10 +57,17 @@ namespace MilestoneMotorsWeb.ViewModels
         [Required]
         public YesOrNo Exchange { get; set; }
 
+        [Required]
         [DisplayName("Headliner Image")]
         public IFormFile? HeadlinerImageUrl { get; set; }
+
+        [Required(ErrorMessage = "Image required")]
         public IFormFile? PhotoOne { get; set; }
+
+        [Required(ErrorMessage = "Image required")]
         public IFormFile? PhotoTwo { get; set; }
+
+        [Required(ErrorMessage = "Image required")]
         public IFormFile? PhotoThree { get; set; }
 
         public IFormFile? PhotoFour { get; set; }
