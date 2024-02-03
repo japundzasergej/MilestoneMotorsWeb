@@ -24,7 +24,7 @@ namespace MilestoneMotorsWeb.Models
         public string EnginePower { get; set; }
         public YesOrNo FixedPrice { get; set; }
         public YesOrNo Exchange { get; set; }
-        public string HeadlinerImageUrl { get; set; }
+        public string? HeadlinerImageUrl { get; set; }
         public List<string>? ImagesUrl { get; set; }
         public string? AdNumber { get; set; }
         public DateTime CreatedAt { get; set; }

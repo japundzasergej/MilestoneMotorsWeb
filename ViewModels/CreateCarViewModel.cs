@@ -1,8 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using MilestoneMotorsWeb.Data.Enums;
-using MilestoneMotorsWeb.Models;
 
 namespace MilestoneMotorsWeb.ViewModels
 {
@@ -59,16 +57,16 @@ namespace MilestoneMotorsWeb.ViewModels
 
         [Required]
         [DisplayName("Headliner Image")]
-        public IFormFile HeadlinerImageUrl { get; set; }
+        public IFormFile? HeadlinerImageUrl { get; set; }
 
         [Required(ErrorMessage = "Image required")]
-        public IFormFile PhotoOne { get; set; }
+        public IFormFile? PhotoOne { get; set; }
 
         [Required(ErrorMessage = "Image required")]
-        public IFormFile PhotoTwo { get; set; }
+        public IFormFile? PhotoTwo { get; set; }
 
         [Required(ErrorMessage = "Image required")]
-        public IFormFile PhotoThree { get; set; }
+        public IFormFile? PhotoThree { get; set; }
 
         public IFormFile? PhotoFour { get; set; }
 
