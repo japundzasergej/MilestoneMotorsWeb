@@ -12,11 +12,18 @@ namespace MilestoneMotorsWeb.Data.Services
 
         public PhotoService(IOptions<CloudinarySettings> config)
         {
-            var account = new Account(
-                config.Value.CloudName,
-                config.Value.ApiKey,
-                config.Value.ApiSecret
-            );
+            try
+            {
+                var account = new Account(
+                    config.Value.CloudName,
+                    config.Value.ApiKey,
+                    config.Value.ApiSecret
+                );
+            }
+            catch (Exception)
+            {
+                throw;
+            }
             _cloudinary = new Cloudinary(account);
         }
 
