@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MilestoneMotorsWeb.Data.Enums;
@@ -22,15 +23,25 @@ namespace MilestoneMotorsWeb.Controllers
         private readonly IPhotoService _photoService = photoService;
         private readonly ILogger<HomeController> _logger = logger;
 
-        private async Task<List<string>> CloudinaryUpload(List<IFormFile> files)
+        private async Task<List<string>> CloudinaryUpload(List<IFormFile?> files)
         {
             List<string> result =  [ ];
-            foreach (var file in files)
+            if (files != null)
             {
-                if (file != null)
+                foreach (var file in files)
                 {
-                    var imageFile = await _photoService.AddPhotoAsync(file);
-                    result.Add(imageFile.Url.ToString());
+                    if (file != null)
+                    {
+                        try
+                        {
+                            var imageFile = await _photoService.AddPhotoAsync(file);
+                            result.Add(imageFile.Url.ToString());
+                        }
+                        catch (Exception)
+                        {
+                            TempData["Error"] = "Image upload service is down.";
+                        }
+                    }
                 }
             }
             return result;
@@ -199,16 +210,41 @@ namespace MilestoneMotorsWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var headlinerImage = await _photoService.AddPhotoAsync(carVM.HeadlinerImageUrl);
-                List<IFormFile> files =
+                ImageUploadResult? headlinerImage;
+                if (carVM.HeadlinerImageUrl != null)
+                {
+                    try
+                    {
+                        headlinerImage = await _photoService.AddPhotoAsync(carVM.HeadlinerImageUrl);
+                    }
+                    catch (Exception)
+                    {
+                        headlinerImage = null;
+                        TempData["Error"] = "Image upload service is down";
+                    }
+                }
+                else
+                {
+                    headlinerImage = null;
+                }
+                List<IFormFile?> files =
                 [
-                    carVM.PhotoOne,
-                    carVM.PhotoTwo,
-                    carVM.PhotoThree,
-                    carVM.PhotoFour,
-                    carVM.PhotoFive,
+                    carVM?.PhotoOne,
+                    carVM?.PhotoTwo,
+                    carVM?.PhotoThree,
+                    carVM?.PhotoFour,
+                    carVM?.PhotoFive,
                 ];
-                var imageList = await CloudinaryUpload(files);
+                List<string> imageList;
+                try
+                {
+                    imageList = await CloudinaryUpload(files);
+                }
+                catch (Exception)
+                {
+                    imageList =  [ ];
+                    TempData["Error"] = "Image upload service is down.";
+                }
                 var carObject = new Car()
                 {
                     Condition = carVM.Condition,
@@ -224,7 +260,7 @@ namespace MilestoneMotorsWeb.Controllers
                     EnginePower = carVM.EnginePower + " (kW/HP)",
                     FixedPrice = carVM.FixedPrice,
                     Exchange = carVM.Exchange,
-                    HeadlinerImageUrl = headlinerImage.Url.ToString(),
+                    HeadlinerImageUrl = headlinerImage?.Url.ToString() ?? "",
                     ImagesUrl = imageList,
                     UserId = carVM.UserId,
                     AdNumber = String.Concat(carVM.UserId, "-", carVM.Brand, "-", carVM.Model),
