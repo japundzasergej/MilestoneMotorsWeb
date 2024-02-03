@@ -32,12 +32,12 @@ namespace MilestoneMotorsWeb.Controllers
                 {
                     if (file != null)
                     {
-                        try
+                        var imageFile = await _photoService.AddPhotoAsync(file);
+                        if (imageFile != null)
                         {
-                            var imageFile = await _photoService.AddPhotoAsync(file);
                             result.Add(imageFile.Url.ToString());
                         }
-                        catch (Exception)
+                        else
                         {
                             TempData["Error"] = "Image upload service is down.";
                         }
@@ -235,16 +235,14 @@ namespace MilestoneMotorsWeb.Controllers
                     carVM?.PhotoFour,
                     carVM?.PhotoFive,
                 ];
-                List<string> imageList;
-                try
+
+                List<string> imageList = await CloudinaryUpload(files) ?? [ ];
+
+                if (imageList.Count == 0)
                 {
-                    imageList = await CloudinaryUpload(files);
-                }
-                catch (Exception)
-                {
-                    imageList =  [ ];
                     TempData["Error"] = "Image upload service is down.";
                 }
+
                 var carObject = new Car()
                 {
                     Condition = carVM.Condition,

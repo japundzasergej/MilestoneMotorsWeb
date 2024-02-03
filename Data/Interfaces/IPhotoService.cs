@@ -4,7 +4,7 @@ namespace MilestoneMotorsWeb.Data.Interfaces
 {
     public interface IPhotoService
     {
-        Task<ImageUploadResult> AddPhotoAsync(IFormFile file);
-        Task<DeletionResult> DeletePhotoAsync(string publicUrl);
+        Task<ImageUploadResult?> AddPhotoAsync(IFormFile file);
+        Task<DeletionResult?> DeletePhotoAsync(string publicUrl);
     }
 }

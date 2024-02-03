@@ -31,6 +31,7 @@
                         }
                     </div>
                         <h5 class="my-3">@Model.UserName</h5>
+                        <partial name="_ErrorNotification"/>
                         <div class="d-flex justify-content-center mb-2">
                         <a asp-controller="User" asp-action="EditPage" asp-route-id="@Model.Id" class="btn btn-primary" style="z-index: 1;">Edit Profile</a>
                         <a asp-controller="User" asp-action="MyListings" class="btn btn-outline-primary ms-1" style="z-index: 1;">My Listings</a>

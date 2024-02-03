@@ -78,7 +78,12 @@ namespace MilestoneMotorsWeb.Controllers
             {
                 var photoResult = await _photoService.AddPhotoAsync(editVM.ProfilePictureImageUrl);
 
-                if (photoResult.Error != null)
+                if (photoResult == null)
+                {
+                    TempData["Error"] = "Image upload service is down.";
+                }
+
+                if (photoResult?.Error != null)
                 {
                     ModelState.AddModelError("Image", "Failed to upload image");
                     return View(editVM);
@@ -89,7 +94,8 @@ namespace MilestoneMotorsWeb.Controllers
                     _ = _photoService.DeletePhotoAsync(user.ProfilePictureImageUrl);
                 }
 
-                user.ProfilePictureImageUrl = photoResult.Url.ToString();
+                user.ProfilePictureImageUrl =
+                    photoResult?.Url.ToString() ?? user.ProfilePictureImageUrl;
                 user.City = editVM?.City?.FirstCharToUpper().Trim() ?? string.Empty;
                 user.State = editVM?.State?.FirstCharToUpper().Trim() ?? string.Empty;
                 user.Country = editVM?.Country?.FirstCharToUpper().Trim() ?? string.Empty;

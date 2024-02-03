@@ -34,8 +34,14 @@
                             <div class="card mb-4 box-shadow">
                                 <a asp-controller="Home" asp-action="Detail" asp-route-id="@car.Id">
                                     <div style="max-height: 214.5px; min-height: 214.5px; overflow: hidden;">
-                                        <img style="width: 100%; height: 100%; object-fit: cover;" class="card-img-top" src="@car.HeadlinerImageUrl" alt="@string.Concat(car.Brand, " ", car.Model, " ", car.ManufacturingYear)" />
-                                        </div>
+                                        @if(!string.IsNullOrWhiteSpace(car.HeadlinerImageUrl))
+                                        {
+                                            <img style="width: 100%; height: 100%; object-fit: cover;" class="card-img-top" src="@car.HeadlinerImageUrl" alt="@string.Concat(car.Brand, " ", car.Model, " ", car.ManufacturingYear)" />
+                                        } else
+                                        {
+                                            <img style="width: 100%; height: 100%; object-fit: cover;" class="card-img-top" src="https://placehold.co/600x400?text=Milestone+Motors" alt="@string.Concat(car.Brand, " ", car.Model, " ", car.ManufacturingYear)" />
+                                        }
+                                    </div>
                                 </a>
                                 <div class="card-body" style="min-height: 250px; max-height: 250px;">
                                     <p class="card-text">
@@ -50,13 +56,13 @@
                                         @{
                                             var description = car.Description;
                                             string charsAllowed;
-                                            if (car.Description.Length <= 70)
+                                            if (car.Description.Length <= 30)
                                             {
                                                 charsAllowed = description;
                                             }
                                             else
                                             {
-                                                charsAllowed = description.Substring(0, 71) + " ...";
+                                                charsAllowed = description.Substring(0, 32) + " ...";
                                             }
 
                                             @charsAllowed
@@ -64,15 +70,15 @@
                                     </p>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="btn-group" style="padding-bottom: 25px;">
-                                            <a class="btn btn-md btn-outline-secondary" asp-controller="Home" asp-action="Detail" asp-route-id="@car.Id">View</a>
+                                            <a class="btn btn-sm btn-outline-secondary" asp-controller="Home" asp-action="Detail" asp-route-id="@car.Id">View</a>
                                             @if ((User?.Identity?.IsAuthenticated == true && User.IsInRole("admin")) || (User?.Identity?.IsAuthenticated == true && User?.GetUserId() == car.UserId))
                                             {
-                                                <a asp-controller="Home" asp-action="Edit" asp-route-id="@car.Id" type="button" class="btn btn-md btn-outline-primary">Edit</a>
+                                                <a asp-controller="Home" asp-action="Edit" asp-route-id="@car.Id" type="button" class="btn btn-sm btn-outline-primary">Edit</a>
                                             }
                                             @if ((User?.Identity?.IsAuthenticated == true && User.IsInRole("admin")) || (User?.Identity?.IsAuthenticated == true && User?.GetUserId() == car.UserId))
                                             {
 
-                                                <button type="button" class="btn btn-md btn-outline-danger" data-toggle="modal" data-target="#deleteCarModal_@car.Id">
+                                                <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#deleteCarModal_@car.Id">
                                                     Delete
                                                 </button>
 
