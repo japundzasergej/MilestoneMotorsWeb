@@ -8,7 +8,7 @@ namespace MilestoneMotorsWeb.Data.Services
 {
     public class PhotoService : IPhotoService
     {
-        private readonly Cloudinary _cloudinary;
+        private readonly Cloudinary? _cloudinary;
 
         public PhotoService(IOptions<CloudinarySettings> config)
         {
@@ -17,29 +17,44 @@ namespace MilestoneMotorsWeb.Data.Services
                 config.Value.ApiKey,
                 config.Value.ApiSecret
             );
-            _cloudinary = new Cloudinary(account);
-        }
-
-        public async Task<ImageUploadResult> AddPhotoAsync(IFormFile file)
-        {
-            var uploadResult = new ImageUploadResult();
-            if (file.Length > 0)
+            try
             {
-                using var stream = file.OpenReadStream();
-                var uploadParams = new ImageUploadParams
-                {
-                    File = new FileDescription(file.FileName, stream)
-                };
-                uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                _cloudinary = new Cloudinary(account);
             }
-            return uploadResult;
+            catch (Exception)
+            {
+                _cloudinary = null;
+            }
         }
 
-        public async Task<DeletionResult> DeletePhotoAsync(string publicUrl)
+        public async Task<ImageUploadResult?> AddPhotoAsync(IFormFile file)
         {
-            var publicId = publicUrl.Split('/').Last().Split('.')[0];
-            var deleteParams = new DeletionParams(publicId);
-            return await _cloudinary.DestroyAsync(deleteParams);
+            if (_cloudinary != null)
+            {
+                var uploadResult = new ImageUploadResult();
+                if (file.Length > 0)
+                {
+                    using var stream = file.OpenReadStream();
+                    var uploadParams = new ImageUploadParams
+                    {
+                        File = new FileDescription(file.FileName, stream)
+                    };
+                    uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                }
+                return uploadResult;
+            }
+            return null;
+        }
+
+        public async Task<DeletionResult?> DeletePhotoAsync(string publicUrl)
+        {
+            if (_cloudinary != null)
+            {
+                var publicId = publicUrl.Split('/').Last().Split('.')[0];
+                var deleteParams = new DeletionParams(publicId);
+                return await _cloudinary.DestroyAsync(deleteParams);
+            }
+            return null;
         }
     }
 }

@@ -47,13 +47,22 @@
             </div>
             <div class="row">
                 <div class="image-container">
-                    <a href="@Model.HeadlinerImageUrl" target="_blank">
-                        <img src="@Model.HeadlinerImageUrl" alt="@Model.Model">
-                    </a>
+                    @if (!(string.IsNullOrEmpty(Model.HeadlinerImageUrl)))
+                    {
+                        <a href="@Model.HeadlinerImageUrl" target="_blank">
+                            <img style="width: 100%; height: 100%; object-fit: cover;" class="card-img-top" src="@Model.HeadlinerImageUrl" alt="@string.Concat(Model.Brand, " ", Model.Model, " ", Model.ManufacturingYear)" />
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="https://placehold.co/600x400?text=Milestone+Motors" target="_blank">
+                            <img style="width: 100%; height: 100%; object-fit: cover;" class="card-img-top" src="https://placehold.co/600x400?text=Milestone+Motors" alt="@string.Concat(Model.Brand, " ", Model.Model, " ", Model.ManufacturingYear)" />
+                        </a>
+                    }
                 </div>
                 <div class="d-flex px-0" style="width: 100%; margin-bottom: 20px;">
                     @{
-                        if(Model.ImagesUrl == null)
+                        if(Model.ImagesUrl == null || Model.ImagesUrl.Count() == 0 )
                         {
                             for(var i = 0; i < 5; i++)
                             {
